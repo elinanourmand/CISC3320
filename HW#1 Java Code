@@ -1,42 +1,45 @@
-/* This code shows how an operating system's pid manager works. 
-* The pid manager assigns a pid to a active process as its array value goes from 0 to 1.
-* The unique pid can only be assigned to one active process. 
-* Once it is done, the pid can be reset to 0 to be ready to be assigned to a new process.
-* The max pid is 5000 and the min pid is 300 which totals to 4700 values.
-* If all the values are in use via assignment to 1, an error will result. 
+/* This code shows how an operating system's pid manager works by initializing, allocating, and releasing a pid. 
+* The pids are in a range of 300-5000 using the constant variables MIN_PID and MAX_PID. An array is used as the data structure here. 
+* The pid manager initializes pids to 0 via the function allocate_map; it will return 1 after the function's completion.
+* Then, it assigns a pid to a active process as its array value goes from 0 to 1 via the function allocate_pid; it will return the pid or -1 if all pids are in use.
+* Lastly, the unique pid can only be assigned to one active process, so once it is done, the pid can be released and reset to 0 to be ready to be assigned to a new process via the function release_pid; it will have a void return type.
 */
 import java.util.*;
 import java.lang.*;
 import java.io.*;
 
 class PidManager{
+	//main function
 	public static void main (String[] args) throws java.lang.Exception{
-	    
-        int int_pid=MIN_PID;
-        if (allocate_map()==1)
-            if (allocate_pid()!=-1)
-                release_pid(int_pid); 
-
+	
+	//if allocate_map is successful in initializing all pids to 0
+        if (allocate_map()==1){
+            System.out.println("Pids are initialized to 0.");
+            int int_pid=allocate_pid(); // int_pid is assigned to value allocated by allocate_pid
+	        if (int_pid==-1) // if int_pid is not allocated
+                System.out.println("Error- all pids in use");
+            else { // else int_pid is allocated
+                System.out.println("Pid " + int_pid+ " has been allocated.");
+                release_pid(int_pid); //int_pid is released and reset to 0
+                System.out.println("Pid " + int_pid+ " has been been released.");
+            }
+        } 
+        else // if allocate_map failed
+	        System.out.println("Error-map allocation failed");
 	}
 	
-	//constant variables of max and min pids
+	//global constant variables of max and min pids
 	final static int MAX_PID=5000, MIN_PID=300;
 	
 	//global array pidValues with size 5000 
 	static int [] pidValues= new int [MAX_PID];
 	
 	//allocate_map function has no parameters. 
-	//It returns 1 after initalizing all pids to 0 or -1 if there was an error.
+	//It returns 1 after initalizing all pids to 0.
 	public static int allocate_map() {
-	    int n= MAX_PID-MIN_PID;
 	    for (int i=MIN_PID; i<MAX_PID; i++){
 	        pidValues[i]=0;
-	        if (pidValues[i]!=0){
-	            System.out.println("Error-Pids could not be initialized.");
-	            return -1;
-	        }
 	    }
-	   System.out.println("Pids are initialized to 0.");
 	   return 1;
 	}
 	
@@ -47,24 +50,17 @@ class PidManager{
 	    for (int i=MIN_PID; i<MAX_PID; i++){
 	        if (pidValues[i]==0){
 	            pidValues[i]=1;
-	            System.out.println("Pid "+i+" has been allocated.");
 	            return i;
 	        }
 	    }
-	    System.out.println("Error-All pids are in use.");
 	    return -1;
 	} 
 
     //release_pid function accepts int_pid as its parameter. 
-    //If the parameter is assigned to 1 then it is released and reset to 0.
+    //It will release int_pid and reset the pid to 0
     //This function's return is void.
     public static void release_pid(int int_pid){
-        for (int_pid=MIN_PID; int_pid<MAX_PID; int_pid++){
-            if(pidValues[int_pid]==1){
-                pidValues[int_pid]=0;
-                System.out.println("Pid "+int_pid+" is released and reset.");
-                return;
-            }
-        }
+        pidValues[int_pid]=0;
+        return;
     } 
 }
