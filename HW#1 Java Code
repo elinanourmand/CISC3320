@@ -1,0 +1,70 @@
+/* This code shows how an operating system's pid manager works. 
+* The pid manager assigns a pid to a active process as its array value goes from 0 to 1.
+* The unique pid can only be assigned to one active process. 
+* Once it is done, the pid can be reset to 0 to be ready to be assigned to a new process.
+* The max pid is 5000 and the min pid is 300 which totals to 4700 values.
+* If all the values are in use via assignment to 1, an error will result. 
+*/
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class PidManager{
+	public static void main (String[] args) throws java.lang.Exception{
+	    
+        int int_pid=MIN_PID;
+        if (allocate_map()==1)
+            if (allocate_pid()!=-1)
+                release_pid(int_pid); 
+
+	}
+	
+	//constant variables of max and min pids
+	final static int MAX_PID=5000, MIN_PID=300;
+	
+	//global array pidValues with size 5000 
+	static int [] pidValues= new int [MAX_PID];
+	
+	//allocate_map function has no parameters. 
+	//It returns 1 after initalizing all pids to 0 or -1 if there was an error.
+	public static int allocate_map() {
+	    int n= MAX_PID-MIN_PID;
+	    for (int i=MIN_PID; i<MAX_PID; i++){
+	        pidValues[i]=0;
+	        if (pidValues[i]!=0){
+	            System.out.println("Error-Pids could not be initialized.");
+	            return -1;
+	        }
+	    }
+	   System.out.println("Pids are initialized to 0.");
+	   return 1;
+	}
+	
+	//allocate_pid function has no parameters.
+	//It returns 1 pid value that has been allocated from 0 to 1. 
+	//Or, it returns -1 if all the pids are in use because they are all assigned to 1.
+	public static int allocate_pid(){
+	    for (int i=MIN_PID; i<MAX_PID; i++){
+	        if (pidValues[i]==0){
+	            pidValues[i]=1;
+	            System.out.println("Pid "+i+" has been allocated.");
+	            return i;
+	        }
+	    }
+	    System.out.println("Error-All pids are in use.");
+	    return -1;
+	} 
+
+    //release_pid function accepts int_pid as its parameter. 
+    //If the parameter is assigned to 1 then it is released and reset to 0.
+    //This function's return is void.
+    public static void release_pid(int int_pid){
+        for (int_pid=MIN_PID; int_pid<MAX_PID; int_pid++){
+            if(pidValues[int_pid]==1){
+                pidValues[int_pid]=0;
+                System.out.println("Pid "+int_pid+" is released and reset.");
+                return;
+            }
+        }
+    } 
+}
