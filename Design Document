@@ -1,9 +1,9 @@
-Declare the range of possible pid values using constants MIN_PID=300 and MAX_PID=5000.
+The range of possible pid values using constants MIN_PID=300 and MAX_PID=5000.
 
-Create int allocate_map(void) function with no parameters and return type int. It will initialize all pids from MIN_PID to MAX_PID to 0 using any data structure.
-It will return 1 after completion or -1 if it was unsuccessful due to an error. 
+int allocate_map(void) function with no parameters and return type int. It will initialize all pids from MIN_PID to MAX_PID to 0 using any data structure.
+It will return 1 after completion.
 
-Create int allocate_pid(void) function with no parameters and return type int. It will allocate 1 pid by assigning it to 1 and an active process. 
+int allocate_pid(void) function with no parameters and return type int. It will allocate 1 pid by assigning it to 1 and an active process. 
 It will return the pid after completion or -1 if all pids are in use. 
 
-Create void release_pid(int_pid) function with int_pid as its parameter and void return type. It will release 1 pid and reset it to 0 to be able to be allocated to a new process.
+void release_pid(int_pid) function with int_pid as its parameter and void return type. It will release 1 pid and reset it to 0 to be able to be allocated to a new process. no error etc
