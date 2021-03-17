@@ -1,0 +1,15 @@
+
+The author of this code is myself, Elina Nourmand.
+
+The homework problem is asking to create and show how an operating system's pid manager works through any data structure. 
+The pid manager is initialized to 0 via the allocate_map function. It will return 1 after all the pids are initialized to 0. 
+Then, via the allocate_pid function, it will activate the process by allocating one pid to 1. It will return the pid value or -1 if all the pids are in use. 
+Every unique pid can only be assigned to one active process. Once the process is done, the release_pid function releases the pid and resets to 0 to be ready to be assigned to a new process. 
+This function has a parameter of int_pid and a void return type. The max pid is 5000 and the min pid is 300 which totals to 4700 values.
+
+Assumptions I had while doing this homework problem:
+1. The array can be defined as global so it does not have to be passed to every function.
+2. Java is an acceptable programming language to use for this assignment.
+3. The size of the array can be MAX_PID large, but the pid values can only range from 300-5000.
+4. Any parameter value or input value will be valid and in the range of 300-5000. 
+5. In the release_pid function, if pid value is not released then no error message will result. Therefore, it will reset any input to 0 without checking input.
