@@ -1,0 +1,38 @@
+import java.util.*;
+
+public class PidTester{
+	
+	public static void main(String[] args) {
+		
+		PidManager.allocate_map();
+		
+        Thread t1 = new Thread(new Threads());
+        Thread t2 = new Thread(new Threads());
+        Thread t3 = new Thread(new Threads());
+        t1.start();
+        t2.start();
+        t3.start();
+    }  
+ 
+	static class Threads implements Runnable {
+        int time;
+        Random r = new Random();
+
+        public Threads(){
+        	time = r.nextInt(999); 
+        } 
+    
+        public void run(){
+        	int pid= PidManager.allocate_pid();
+        	System.out.println(pid + " requested");
+        	try{
+        		Thread.sleep(time); 
+        		System.out.println(pid + " slept for "+ time);
+        	}catch(Exception e){
+        	}finally {
+        		PidManager.release_pid(pid);
+        		System.out.println(pid + " released");
+        	}
+        }
+	} 
+}
