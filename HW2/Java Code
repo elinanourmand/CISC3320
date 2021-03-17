@@ -1,1 +1,47 @@
+/* This codes shows how a multithreaded program can test HW1 (ie. PidManager).  
+ * Each thread requests a pid, puts the pid to sleep for a random amount of time, and then releases the pid. 
+ * Three threads are created.
+ */
+import java.util.*;
 
+public class PidTester{
+	
+	public static void main(String[] args) {
+		
+		//initialize the pid
+		PidManager.allocate_map();
+		
+		//Three new threads are created and started
+        Thread t1 = new Thread(new Threads());
+        Thread t2 = new Thread(new Threads());
+        Thread t3 = new Thread(new Threads());
+        t1.start();
+        t2.start();
+        t3.start();
+    }// closes main  
+ 
+	//Runnable interface contains run() method
+	static class Threads implements Runnable {
+        int time;
+        Random r = new Random();
+        
+        //Threads constructor
+        public Threads(){
+        	time = r.nextInt(999); //time set to random number from 0-999 milliseconds
+        } 
+        
+        //run () method will start when each thread starts
+        public void run(){
+        	int pid= PidManager.allocate_pid(); //pid is requested through the allocate method
+        	System.out.println(pid + " requested");
+        	try{
+        		Thread.sleep(time); // puts Thread to sleep for random amount of time
+        		System.out.println(pid + " slept for "+ time);
+        	}catch(Exception e){
+        	}finally {
+        		PidManager.release_pid(pid); //releases the pid
+        		System.out.println(pid + " released");
+        	}
+        }
+	} // closes class Threads 
+}// closes class PidTester
