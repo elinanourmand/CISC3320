@@ -1,1 +1,9 @@
+The author of this code is myself, Elina Nourmand.
 
+The homework problem is asking to create a multithreaded program that tests HW1 (ie. PidManager).
+Each thread will request a pid, put the pid to sleep for a random amount of time, and then release the pid. 
+Mutliple threads need to be created.
+
+Assumptions I had while doing this homework problem:
+1. HW1's Java code needs to be saved in the same package as HW2's Java code to ensure HW2 can call HW1's methods (ie. allocate_pid() and release_pid()).
+2. If the Java code works for three threads, it will work for 100+ threads.
