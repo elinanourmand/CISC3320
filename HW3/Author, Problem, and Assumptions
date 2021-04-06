@@ -1,0 +1,8 @@
+The author of this code is myself, Elina Nourmand.
+
+The homework problem is asking to modify HW#2 so to ensure that the data structure used to 
+represent the availability of process identifiers is safe from race conditions by using mutex locks.
+
+Assumptions I had while doing this homework problem:
+1. HW2's Java code can be used if modified with mutex locks. 
+2. If the Java code works for three threads, it will work for 100+ threads.
