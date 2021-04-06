@@ -11,9 +11,7 @@ public class MutexLocks {
 
 			
 			//initialize the pid
-			lock.lock(); //acquire lock
 			PidManager.allocate_map();
-			lock.unlock(); //release lock
 			
 			//Three new threads are created and started
 	        	Thread t1 = new Thread(new Threads());
