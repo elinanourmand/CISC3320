@@ -1,0 +1,56 @@
+/* This code shows how HW#2 is modified to ensure that the data structure used to represent 
+ * the availability of process identifiers is safe from race conditions
+ * by using mutex locks.
+ */
+import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
+public class MutexLocks {
+		
+		public static void main(String[] args) {
+			ReentrantLock lock= new ReentrantLock();
+
+			
+			//initialize the pid
+			lock.lock();
+			PidManager.allocate_map();
+			lock.unlock();
+			
+			//Three new threads are created and started
+	        	Thread t1 = new Thread(new Threads());
+	        	Thread t2 = new Thread(new Threads());
+	        	Thread t3 = new Thread(new Threads());
+	        	t1.start();
+	        	t2.start();
+	        	t3.start();
+		}// closes main  
+	 
+		//Runnable interface contains run() method
+		static class Threads implements Runnable {
+				ReentrantLock lock= new ReentrantLock();
+	        	int time;
+	        	Random r = new Random();
+	        
+	       		//Threads constructor
+	        	public Threads(){
+	        		time = r.nextInt(999); //time set to random number from 0-999 milliseconds
+	        	} 
+	        
+	        	//run () method will start when each thread starts
+	        	public void run(){
+	        		lock.lock();
+	        		int pid= PidManager.allocate_pid(); //pid is requested through the allocate method
+	        		lock.unlock();
+	        		System.out.println(pid + " requested");
+	        		try{
+	        			Thread.sleep(time); // puts Thread to sleep for random amount of time
+	        			System.out.println(pid + " slept for "+ time);
+	        		}catch(Exception e){
+	        		}finally {
+	        			lock.lock();
+	        			PidManager.release_pid(pid); //releases the pid
+	        			lock.unlock();
+	        			System.out.println(pid + " released");
+	        		}
+	        	}
+		} // closes class Threads 
+	}// closes class MutexLocks
