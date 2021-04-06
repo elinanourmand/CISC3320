@@ -11,9 +11,9 @@ public class MutexLocks {
 
 			
 			//initialize the pid
-			lock.lock();
+			lock.lock(); //acquire lock
 			PidManager.allocate_map();
-			lock.unlock();
+			lock.unlock(); //release lock
 			
 			//Three new threads are created and started
 	        	Thread t1 = new Thread(new Threads());
@@ -26,7 +26,7 @@ public class MutexLocks {
 	 
 		//Runnable interface contains run() method
 		static class Threads implements Runnable {
-				ReentrantLock lock= new ReentrantLock();
+				ReentrantLock lock= new ReentrantLock(); // ReentrantLock object created
 	        	int time;
 	        	Random r = new Random();
 	        
@@ -37,18 +37,18 @@ public class MutexLocks {
 	        
 	        	//run () method will start when each thread starts
 	        	public void run(){
-	        		lock.lock();
+	        		lock.lock(); //acquire lock
 	        		int pid= PidManager.allocate_pid(); //pid is requested through the allocate method
-	        		lock.unlock();
+	        		lock.unlock(); //release lock
 	        		System.out.println(pid + " requested");
 	        		try{
 	        			Thread.sleep(time); // puts Thread to sleep for random amount of time
 	        			System.out.println(pid + " slept for "+ time);
 	        		}catch(Exception e){
 	        		}finally {
-	        			lock.lock();
+	        			lock.lock(); //acquire lock
 	        			PidManager.release_pid(pid); //releases the pid
-	        			lock.unlock();
+	        			lock.unlock(); //release lock
 	        			System.out.println(pid + " released");
 	        		}
 	        	}
