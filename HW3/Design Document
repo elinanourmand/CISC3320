@@ -2,4 +2,4 @@ In the main method, allocate_pid() is called to initalize the pid. Also, three n
 
 In the static class Threads, Runnable is implemented. A ReentrantLock object is created. It has the Threads constructor with the variable time set to a random number from 0-999 milliseconds.
 Lastly, it has the void run() method to request a pid via allocate_pid(), puts Thread to sleep for a random amount of time, catch an Exception e, and finally release a pid via release_pid().
-Both allocate_pid() and release_pid() acquire locks before before called and release locks after completed. 
+Both allocate_pid() and release_pid() acquire locks before being called and release locks after completed. 
