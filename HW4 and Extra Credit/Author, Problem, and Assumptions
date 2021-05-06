@@ -8,3 +8,4 @@ Assumptions I had while doing this homework problem:
 1. No need to circle back and reverse direction for CLook and CScan because the initial position of the disk head is the same as the smallest request. 
 Therefore, the total head movements for CLook and Look are the same as well as CScan and Scan. 
 2. We are able to sort the requests array before going through the requests. 
+3. Hardcoding is allowed.
