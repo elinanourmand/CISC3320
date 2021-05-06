@@ -1,0 +1,207 @@
+/* This program implements the disk-scheduling algorithms: FCFS, Scan, CScan, Look, and CLook. 
+ * The program services a disk drive with 5,000 cylinders numbered 0-4,999. A set of 50 requests has been provided. 
+ * The initial position of the disk head is 100 and moving upwards. Each algorithm returns back the the total amount of head movement. 
+ */
+
+public class DiskSchedulingAlgo {
+	public static void main (String args[]) {
+		int initial= 100;  
+		int fcfs = FCFS(initial);
+		System.out.println("The total head movements using FCFS: "+fcfs );
+		int scan = Scan(initial);
+		System.out.println("The total head movements using Scan: "+scan );
+		int cscan = CScan(initial);
+		System.out.println("The total head movements using CScan: "+cscan );
+		int look = Look(initial);
+		System.out.println("The total head movements using Look: "+look );
+		int clook = CLook(initial);
+		System.out.println("The total head movements using CLook: "+clook );
+	}
+	public static int cylinders = 5000;
+    public static int requests[] = {4078, 153, 2819, 3294, 1433, 211, 1594, 2004, 2335, 2007, 771, 1043, 3950, 2784, 1881, 2931, 3599, 1245, 4086, 520, 3901, 2866, 947, 3794, 2353, 3970, 3948, 1815, 4621, 372, 2684, 3088, 827, 3126, 2083, 584, 4420, 1294, 917, 2881, 3659, 2868, 100, 1581, 4581, 1664, 1001, 1213, 3439, 4706};
+    
+    //FCFS services requests as they come in so first come first serve
+    public static int FCFS(int initial) {
+    	int totalHeadMovements=Math.abs(initial-requests[0]);
+    	for (int i=0; i<49; i++) {
+    		totalHeadMovements+= Math.abs(requests[i]-requests[i+1]);
+    	}
+    	return totalHeadMovements;
+    }
+    
+    //Scan services all requests going up until 4999 and then reverses and the services continue
+    public static int Scan(int initial) {
+    	int n = requests.length;
+    	
+    	//sort requests array
+        for (int i = 0; i < n-1; i++)
+            for (int j = 0; j < n-i-1; j++)
+                if (requests[j] > requests[j+1]){
+                    // swap requests[j+1] and requests[j]
+                    int temp = requests[j];
+                    requests[j] = requests[j+1];
+                    requests[j+1] = temp;
+                }
+        //find the first disk serviced by finding the min distance between the initial disk and every other disk
+        int min=initial-requests[0];
+        int minIndex=0;
+        for (int i=1; i<50; i++) {
+        	if(min<(initial-requests[i]))
+        		minIndex=i;
+        }	
+        
+        //The distance of the first disk served is added to the total head movements
+        int totalHeadMovements=initial-requests[minIndex];
+        
+        //head moving upwards until the highest disk value
+        for (int i=minIndex; i<49; i++) {
+        	totalHeadMovements+= Math.abs(requests[i]-requests[i+1]);
+        }
+        
+        //going upwards so need to go until cylinders-1 
+        totalHeadMovements+=Math.abs(requests[49]-(cylinders-1));
+        
+        //Now starts to bounce back and reverse direction from the right end of the disk to the closest left end of the disk until the smallest disk value
+        if (minIndex>0) {	//if the first disk served is not the smallest number
+        	totalHeadMovements+=Math.abs((cylinders-1)-requests[minIndex-1]);
+        	for (int i=minIndex-1; i>0; i--) {
+        		totalHeadMovements+=Math.abs(requests[i]-requests[i-1]);
+        	}
+        }	
+		return totalHeadMovements;
+    }
+    
+    //CScan services all requests going upward until 4999 and then returns to the beginning of
+    //the disk to 0 without servicing any requests on the return trip. Once it reaches 0, it starts services the rest of the requests. 
+    public static int CScan(int initial) {
+    	int n = requests.length;
+    	
+    	//sort requests array
+        for (int i = 0; i < n-1; i++)
+            for (int j = 0; j < n-i-1; j++)
+                if (requests[j] > requests[j+1]){
+                    // swap requests[j+1] and requests[j]
+                    int temp = requests[j];
+                    requests[j] = requests[j+1];
+                    requests[j+1] = temp;
+                }
+        //find the first disk served by finding the min distance between the initial disk and every other disk
+        int min=initial-requests[0];
+        int minIndex=0;
+        for (int i=1; i<50; i++) {
+        	if(min<(initial-requests[i]))
+        		minIndex=i;
+        }	
+        
+        //The distance of the first disk served is added to the total head movements
+        int totalHeadMovements=initial-requests[minIndex];
+        
+        //head moving upwards until the highest disk value
+        for (int i=minIndex; i<49; i++) {
+        	totalHeadMovements+= Math.abs(requests[i]-requests[i+1]);
+        }
+        
+        //going upwards so need to go until cylinders-1 
+        totalHeadMovements+=Math.abs(requests[49]-(cylinders-1));
+        
+        
+        if (minIndex>0) {	//if the first disk served is not the smallest number
+        	//Now it circles back to the beginning of the disk without servicing any requests on the return trip
+            totalHeadMovements+=(cylinders-1);
+            //Then it starts to service again as it moves back upwards 
+        	totalHeadMovements+=Math.abs(0-requests[0]);
+        	int i=0;
+        	while(i<(minIndex-1)) {
+        		totalHeadMovements+=Math.abs(requests[i]-requests[i+1]);
+        		i++;
+        	}
+        }	
+		return totalHeadMovements;
+    }
+    
+    //Look services all requests going up and then reverses and the services continue. The arm goes only as far as the final request in each direction 
+    //and does not go all the way to the end of the disk in the reverse. 
+    public static int Look(int initial) {
+    	int n = requests.length;
+    	
+    	//sort requests array
+        for (int i = 0; i < n-1; i++)
+            for (int j = 0; j < n-i-1; j++)
+                if (requests[j] > requests[j+1]){
+                    // swap requests[j+1] and requests[j]
+                    int temp = requests[j];
+                    requests[j] = requests[j+1];
+                    requests[j+1] = temp;
+                }
+        //find the first disk served by finding the min distance between the initial disk and every other disk
+        int min=initial-requests[0];
+        int minIndex=0;
+        for (int i=1; i<50; i++) {
+        	if(min<(initial-requests[i]))
+        		minIndex=i;
+        }	
+        
+        //The distance of the first disk served is added to the total head movements
+        int totalHeadMovements=initial-requests[minIndex];
+        
+        //head moving upwards until the highest disk value
+        for (int i=minIndex; i<49; i++) {
+        	totalHeadMovements+= Math.abs(requests[i]-requests[i+1]);
+        }
+       
+        //Now starts to bounce back and reverse direction from the right end of the disk to the closest left end of the disk until the smallest disk value
+        if (minIndex>0) {	//if the first disk served is not the smallest number
+        	totalHeadMovements+=Math.abs(requests[49]-requests[minIndex-1]);
+        	for (int i=minIndex-1; i>0; i--) {
+        		totalHeadMovements+=Math.abs(requests[i]-requests[i-1]);
+        	}
+        }	
+		return totalHeadMovements;
+    }
+
+
+    //CLook services all requests going upward and then returns to the beginning of
+    //the disk to the smallest request without servicing any requests on the return trip. Once it reaches the smallest request, it starts services the rest of the requests. 
+    //The arm goes only as far as the final request in each direction and does not go all the way to the end of the disk in the reverse. 
+    public static int CLook(int initial) {
+    	int n = requests.length;
+    	
+    	//sort requests array
+        for (int i = 0; i < n-1; i++)
+            for (int j = 0; j < n-i-1; j++)
+                if (requests[j] > requests[j+1]){
+                    // swap requests[j+1] and requests[j]
+                    int temp = requests[j];
+                    requests[j] = requests[j+1];
+                    requests[j+1] = temp;
+                }
+        //find the first disk served by finding the min distance between the initial disk and every other disk
+        int min=initial-requests[0];
+        int minIndex=0;
+        for (int i=1; i<50; i++) {
+        	if(min<(initial-requests[i]))
+        		minIndex=i;
+        }	
+        //The distance of the first disk served is added to the total head movements
+        int totalHeadMovements=initial-requests[minIndex];
+        
+        //head moving upwards until the highest disk value
+        for (int i=minIndex; i<49; i++) {
+        	totalHeadMovements+= Math.abs(requests[i]-requests[i+1]);
+        }
+        
+        
+        if (minIndex>0) {//if the first disk served is not the smallest number
+        	//Now it circles back to the beginning of the disk without servicing any requests on the return trip
+            totalHeadMovements+=Math.abs(requests[49]-requests[0]);
+            //Then it starts to service again as it moves back upwards 
+        	int i=0;
+        	while(i<(minIndex-1)) {
+        		totalHeadMovements+=Math.abs(requests[i]-requests[i+1]);
+        		i++;
+        	}
+        }	
+		return totalHeadMovements;
+    }
+        
+}
