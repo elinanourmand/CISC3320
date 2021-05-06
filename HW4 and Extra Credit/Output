@@ -1,0 +1,5 @@
+The total head movements using FCFS: 90216
+The total head movements using Scan: 4899
+The total head movements using CScan: 4899
+The total head movements using Look: 4606
+The total head movements using CLook: 4606
